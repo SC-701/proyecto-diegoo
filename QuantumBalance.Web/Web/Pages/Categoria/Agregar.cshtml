@@ -1,0 +1,23 @@
+﻿@page
+@model Web.Pages.Categoria.AgregarModel
+@{
+    ViewData["Title"] = "Agregar Categoría";
+}
+
+<div class="container mt-4">
+    <h2>Agregar nueva categoría</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="Categoria.Nombre" class="form-label"></label>
+            <input asp-for="Categoria.Nombre" class="form-control" />
+            <span asp-validation-for="Categoria.Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Categoria.Descripcion" class="form-label"></label>
+            <textarea asp-for="Categoria.Descripcion" class="form-control"></textarea>
+            <span asp-validation-for="Categoria.Descripcion" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a asp-page="./Index" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>

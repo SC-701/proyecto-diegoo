@@ -1,0 +1,23 @@
+﻿@page
+@model Web.Pages.TipoPago.AgregarModel
+@{
+    ViewData["Title"] = "Agregar Tipo de Pago";
+}
+
+<div class="container mt-4">
+    <h2>Agregar nuevo tipo de pago</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="TipoPago.nombre" class="form-label"></label>
+            <input asp-for="TipoPago.nombre" class="form-control" />
+            <span asp-validation-for="TipoPago.nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="TipoPago.descripcion" class="form-label"></label>
+            <textarea asp-for="TipoPago.descripcion" class="form-control"></textarea>
+            <span asp-validation-for="TipoPago.descripcion" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a asp-page="./Index" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>

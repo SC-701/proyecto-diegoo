@@ -1,0 +1,23 @@
+﻿@page
+@model Web.Pages.Categoria.DetalleModel
+@{
+}
+<h1>Detalle @Html.DisplayFor(modelo => Model.categoria.Nombre)</h1>
+
+<div class="container">
+    <div class="row my-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">@Html.DisplayFor(modelo => Model.categoria.Nombre)</h5>
+                    <p class="card-text">@Html.DisplayFor(modelo => Model.categoria.Descripcion)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a type="button" class="btn btn-primary" asp-page="./Index">Volver</a>
+        </div>
+    </div>
+</div>

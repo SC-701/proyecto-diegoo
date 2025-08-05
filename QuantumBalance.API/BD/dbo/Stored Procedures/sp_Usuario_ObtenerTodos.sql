@@ -1,0 +1,7 @@
+﻿
+-- OBTENER TODOS
+CREATE PROCEDURE sp_Usuario_ObtenerTodos
+AS
+BEGIN
+    SELECT * FROM Usuario;
+END;
