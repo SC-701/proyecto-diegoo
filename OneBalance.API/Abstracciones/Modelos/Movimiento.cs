@@ -19,8 +19,7 @@ namespace Abstracciones.Modelos
 
         public decimal MontoCrc { get; set; }
         public decimal TasaCambio { get; set; }
-        public DateTime Fecha { get; set; }
-        public string ComprobanteUrl { get; set; }
+        public DateTime Fecha { get; set; }        
         public bool Estado { get; set; }
     }
 

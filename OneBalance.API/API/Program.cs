@@ -23,11 +23,13 @@ builder.Services.AddScoped<ICuentaDA, CuentaDA>();
 builder.Services.AddScoped<IUsuarioDA, UsuarioDA>();
 builder.Services.AddScoped<ICategoriaDA, CategoriaDA>();
 builder.Services.AddScoped<ITipoPagoDA, TipoPagoDA>();
+builder.Services.AddScoped<IMovimientoDA, MovimientoDA>();
 
 builder.Services.AddScoped<ICuentaFlujo, CuentaFlujo>();
 builder.Services.AddScoped<IUsuarioFlujo, UsuarioFlujo>();
 builder.Services.AddScoped<ICategoriaFlujo, CategoriaFlujo>();
 builder.Services.AddScoped<ITIpoPagoFlujo, TipoPagoFlujo>();
+builder.Services.AddScoped<IMovimientoFlujo, MovimientoFlujo>();
 
 var app = builder.Build();
 

@@ -36,6 +36,6 @@ namespace Abstracciones.Modelos
     public class CuentaResponse : CuentaBase
     {
         public Guid idCuenta { get; set; }
-        public string Usuario { get; set; }
+        public Guid IdUsuario { get; set; }
     }
 }
