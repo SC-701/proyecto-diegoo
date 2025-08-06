@@ -1,7 +1,7 @@
-create database QuantumBalance
+create database OneBalance
 go
 
-use QuantumBalance
+use OneBalance
 go
 
 CREATE TABLE Usuario (
@@ -44,6 +44,14 @@ CREATE TABLE TipoPago (
     activestado BIT
 );
 
+CREATE TABLE CuentaCategoria (
+    idCategoria UNIQUEIDENTIFIER,
+    idCuenta UNIQUEIDENTIFIER,
+    PRIMARY KEY (idCategoria, idCuenta),
+    FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria),
+    FOREIGN KEY (idCuenta) REFERENCES Cuenta(idCuenta)
+);
+
 CREATE TABLE Movimiento (
     idMovimiento UNIQUEIDENTIFIER PRIMARY KEY,
     idCuenta UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Cuenta(idCuenta),
@@ -68,12 +76,4 @@ CREATE TABLE Presupuestos (
     montoGastado DECIMAL(18,2),
     fechaCreacion DATETIME,
     estado BIT
-);
-
-CREATE TABLE CuentaCategoria (
-    idCategoria UNIQUEIDENTIFIER,
-    idCuenta UNIQUEIDENTIFIER,
-    PRIMARY KEY (idCategoria, idCuenta),
-    FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria),
-    FOREIGN KEY (idCuenta) REFERENCES Cuenta(idCuenta)
 );
