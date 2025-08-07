@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstracciones", "Abstracciones\Abstracciones.csproj", "{DEEBD4E6-0EB1-4570-9255-6D6A890F0625}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reglas", "Reglas\Reglas.csproj", "{54D83A32-75E2-4986-8C6B-B7D102D969F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{81C85E4A-05FF-46B7-A1EA-E0E60FE6D57E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEEBD4E6-0EB1-4570-9255-6D6A890F0625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEEBD4E6-0EB1-4570-9255-6D6A890F0625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEEBD4E6-0EB1-4570-9255-6D6A890F0625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEEBD4E6-0EB1-4570-9255-6D6A890F0625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54D83A32-75E2-4986-8C6B-B7D102D969F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54D83A32-75E2-4986-8C6B-B7D102D969F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54D83A32-75E2-4986-8C6B-B7D102D969F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54D83A32-75E2-4986-8C6B-B7D102D969F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81C85E4A-05FF-46B7-A1EA-E0E60FE6D57E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81C85E4A-05FF-46B7-A1EA-E0E60FE6D57E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81C85E4A-05FF-46B7-A1EA-E0E60FE6D57E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81C85E4A-05FF-46B7-A1EA-E0E60FE6D57E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0225EB9-EAC6-4C95-970F-E14A48BD1F67}
+	EndGlobalSection
+EndGlobal

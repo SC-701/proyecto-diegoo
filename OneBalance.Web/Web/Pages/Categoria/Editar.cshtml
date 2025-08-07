@@ -1,0 +1,26 @@
+﻿@page "{id:guid?}"
+@model Web.Pages.Categoria.EditarModel
+@{
+    ViewData["Title"] = "Editar Categoría";
+}
+
+<div class="container mt-4">
+    <h2>Editar categoría</h2>
+    <form method="post">
+        <div class="mb-3">
+            <input asp-for="Categoria.idCategoria" class="form-control" hidden/>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Categoria.Nombre" class="form-label"></label>
+            <input asp-for="Categoria.Nombre" class="form-control" />
+            <span asp-validation-for="Categoria.Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Categoria.Descripcion" class="form-label"></label>
+            <textarea asp-for="Categoria.Descripcion" class="form-control"></textarea>
+            <span asp-validation-for="Categoria.Descripcion" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a asp-page="./Index" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>

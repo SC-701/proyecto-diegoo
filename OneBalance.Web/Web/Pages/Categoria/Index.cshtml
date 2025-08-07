@@ -1,0 +1,51 @@
+﻿@page
+@model Web.Pages.Categoria.IndexModel
+@{
+}
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col">
+            <h1>Listado de categorias</h1>
+        </div>
+        <div class="col-auto ms-auto">
+            <a class="btn btn-primary" asp-page="./Agregar">Nueva categoría</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        @if(Model.categorias != null)
+        {
+            @foreach (var categoria in Model.categorias)
+            {
+                <div class="col-md-4 my-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <p>
+                                    <span class="fw-bold">Categoria:</span> @categoria.Nombre
+                                </p>
+                            </div>
+                            <p>
+                                <span class="fw-semibold">Descripcion:</span> @categoria.Descripcion
+                            </p>
+                            <div>
+                                <a type="button" class="btn btn-info" asp-page="./Detalle" asp-route-id="@categoria.idCategoria">Detalle</a>
+                                <a type="button" class="btn btn-warning" asp-page="./Editar" asp-route-id="@categoria.idCategoria">Editar</a>
+                                <a type="button" class="btn btn-danger" asp-page="./Eliminar" asp-route-id="@categoria.idCategoria">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        } else
+        {
+            <div class="col">
+                <h3>
+                    no hay categorias registradas
+                </h3>
+            </div>
+        }
+    </div>
+</div>
