@@ -1,12 +1,38 @@
 using Abstracciones.Interfaces.DA;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Interfaces.Reglas;
+using Abstracciones.Modelos;
+using Autorizacion.Middleware;
 using DA;
 using DA.Repositorios;
 using Flujo;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Reglas;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var tokenConfiguration = builder.Configuration.GetSection("Token").Get<TokenConfig>();
+
+var jwtIssuer = tokenConfiguration.Issuer;
+var jwtAudience = tokenConfiguration.Audience;
+var jwtKey = tokenConfiguration.key;
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    options => {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    }
+);
 
 // Add services to the container.
 
@@ -31,6 +57,10 @@ builder.Services.AddScoped<ICategoriaFlujo, CategoriaFlujo>();
 builder.Services.AddScoped<ITIpoPagoFlujo, TipoPagoFlujo>();
 builder.Services.AddScoped<IMovimientoFlujo, MovimientoFlujo>();
 
+builder.Services.AddTransient<Autorizacion.Abstracciones.BW.IAutorizacionBW, Autorizacion.BW.AutorizacionBW>();
+builder.Services.AddTransient<Autorizacion.Abstracciones.DA.ISeguridadDA, Autorizacion.DA.SeguridadDA>();
+builder.Services.AddTransient<Autorizacion.Abstracciones.DA.IRepositorioDapper, Autorizacion.DA.Repositorios.RepositorioDapper>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.AutorizacionClaims();
 
 app.UseAuthorization();
 

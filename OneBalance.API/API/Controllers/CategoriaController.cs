@@ -1,11 +1,13 @@
 ﻿using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CategoriaController : Controller, ICategoriaController
     {
@@ -19,6 +21,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize (Roles = "1")]
         public async Task<IActionResult> CrearCategoria([FromBody] CategoriaRequest categoria)
         {
             Guid nuevaCuenta = await _categoriaFlujo.CrearCategoria(categoria);
@@ -66,7 +69,7 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]        
         public async Task<IActionResult> ObtenerCategoriaPorId([FromRoute] Guid id)
         {
             CategoriaResponse categoria = await _categoriaFlujo.ObtenerCategoriaPorId(id);
@@ -81,6 +84,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ObtenerTodasLasCategorias()
         {
             IEnumerable<CategoriaResponse> categorias = await _categoriaFlujo.ObtenerTodasLasCategorias();
