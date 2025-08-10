@@ -95,6 +95,27 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("ultimos5")]
+        public async Task<IActionResult> ObtenerMovimientosPorCuenta([FromQuery] Guid idCuenta)
+        {
+            if (idCuenta == Guid.Empty)
+            {
+                _logger.LogError("ID de la cuenta inválido.");
+                return BadRequest("ID de la la cuenta inválido.");
+            }
+
+            IEnumerable<MovimientoResponse> movimientos = await _movimientoFlujo.ObtenerMovimientosPorCuenta(idCuenta);
+
+            if (movimientos == null || !movimientos.Any())
+            {
+                _logger.LogError("No se encontraron movimientos para la cuenta con ID: {IdCuenta}", idCuenta);
+                return NotFound($"No se encontraron movimientos para la cuenta con ID: {idCuenta}");
+            }
+
+            return Ok(movimientos);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ObtenerTodosLosMovimientos()
         {
             IEnumerable<MovimientoResponse> movimientos = await _movimientoFlujo.ObtenerTodosLosMovimientos();

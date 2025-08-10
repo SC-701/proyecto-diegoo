@@ -81,6 +81,13 @@ namespace DA
             return await _sqlConnection.QueryFirstOrDefaultAsync<MovimientoResponse>(sqlQuery, new { idMovimiento = id });
         }
 
+        public Task<IEnumerable<MovimientoResponse>> ObtenerMovimientosPorCuenta(Guid idCuenta)
+        {
+            string sqlQuery = "sp_Movimiento_ObtenerUltimos5PorCuenta";
+
+            return _sqlConnection.QueryAsync<MovimientoResponse>(sqlQuery, new { idCuenta });
+        }
+
         public Task<IEnumerable<MovimientoResponse>> ObtenerTodosLosMovimientos()
         {
             string sqlQuery = "sp_Movimiento_ObtenerTodos";

@@ -39,6 +39,11 @@ namespace Flujo
             return await _movimientoDa.ObtenerMovimientoPorId(id);
         }
 
+        public async Task<IEnumerable<MovimientoResponse>> ObtenerMovimientosPorCuenta(Guid idCuenta)
+        {
+            return await _movimientoDa.ObtenerMovimientosPorCuenta(idCuenta);
+        }
+
         public async Task<IEnumerable<MovimientoResponse>> ObtenerTodosLosMovimientos()
         {
             return await _movimientoDa.ObtenerTodosLosMovimientos();

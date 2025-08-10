@@ -15,5 +15,6 @@ namespace Abstracciones.Interfaces.DA
         Task<Guid> CrearMovimiento(MovimientoRequest movimiento);
         Task<Guid> EditarMovimiento(Guid id, MovimientoRequest movimiento);
         Task<Guid> EliminarMovimiento(Guid id);
+        Task<IEnumerable<MovimientoResponse>> ObtenerMovimientosPorCuenta(Guid idCuenta);
     }
 }

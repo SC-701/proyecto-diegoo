@@ -102,5 +102,6 @@
     <Build Include="dbo\Stored Procedures\sp_Categoria_Eliminar.sql" />
     <Build Include="dbo\Stored Procedures\sp_Categoria_Editar.sql" />
     <Build Include="dbo\Stored Procedures\sp_Categoria_Crear.sql" />
+    <Build Include="dbo\Stored Procedures\sp_Movimiento_ObtenerUltimos5PorCuenta.sql" />
   </ItemGroup>
 </Project>

@@ -15,5 +15,6 @@ namespace Abstracciones.Interfaces.API
         Task<IActionResult> CrearMovimiento(MovimientoRequest movimiento);
         Task<IActionResult> EditarMovimiento(Guid id, MovimientoRequest movimiento);
         Task<IActionResult> EliminarMovimiento(Guid id);
+        Task<IActionResult> ObtenerMovimientosPorCuenta(Guid idCuenta);
     }
 }
