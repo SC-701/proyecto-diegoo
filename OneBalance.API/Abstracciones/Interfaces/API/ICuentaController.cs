@@ -15,5 +15,6 @@ namespace Abstracciones.Interfaces.API
         Task<IActionResult> CrearCuenta(CuentaRequest cuenta);
         Task<IActionResult> EditarCuenta(Guid id, CuentaRequest cuenta);
         Task<IActionResult> EliminarCuenta(Guid id);
+        Task<IActionResult> ObtenerentasPorUsuario(Guid idUsuario);
     }
 }

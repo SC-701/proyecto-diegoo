@@ -36,6 +36,11 @@ namespace Flujo
             return await _cuentaDA.ObtenerCuentaPorId(id);
         }
 
+        public Task<IEnumerable<CuentaResponse>> ObtenerentasPorUsuario(Guid idUsuario)
+        {
+            return _cuentaDA.ObtenerentasPorUsuario(idUsuario);
+        }
+
         public async Task<IEnumerable<CuentaResponse>> ObtenerTodasLasCuentas()
         {
             return await _cuentaDA.ObtenerTodasLasCuentas();

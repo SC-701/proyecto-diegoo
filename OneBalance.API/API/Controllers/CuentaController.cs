@@ -1,6 +1,7 @@
 ﻿using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
+using DA;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -40,12 +41,15 @@ namespace API.Controllers
                 _logger.LogError("ID de cuenta inválido o cuenta nula.");
                 return BadRequest("ID de cuenta inválido o cuenta nula.");
             }
+
             Guid resultado = await _cuentaFlujo.EditarCuenta(id, cuenta);
+
             if (resultado == Guid.Empty)
             {
                 _logger.LogError("Error al editar la cuenta.");
                 return BadRequest("Error al editar la cuenta.");
             }
+
             return NoContent();
         }
 
@@ -77,7 +81,7 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> ObtenerTodasLasCuentas()
         {
             IEnumerable<CuentaResponse> cuentas = await _cuentaFlujo.ObtenerTodasLasCuentas();
@@ -86,6 +90,27 @@ namespace API.Controllers
             {
                 _logger.LogError("No se encontraron cuentas.");
                 return NotFound("No se encontraron cuentas.");
+            }
+
+            return Ok(cuentas);
+        }
+
+        [HttpGet]
+        [Route("ObtenerentasPorUsuario")]
+        public async Task<IActionResult> ObtenerentasPorUsuario([FromQuery] Guid idUsuario)
+        {
+            if (idUsuario == Guid.Empty || idUsuario == null)
+            {
+                _logger.LogError("ID del usuario es inválido");
+                return BadRequest("ID del usuario es inválido");
+            }
+
+            IEnumerable<CuentaResponse> cuentas = await _cuentaFlujo.ObtenerentasPorUsuario(idUsuario);
+
+            if (cuentas == null || !cuentas.Any())
+            {
+                _logger.LogError($"No se encontraron cuentas para el usuario con ID {idUsuario}.");
+                return NotFound("No se encontraron cuentas para el usuario.");
             }
 
             return Ok(cuentas);

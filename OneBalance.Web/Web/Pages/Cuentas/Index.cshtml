@@ -1,0 +1,109 @@
+﻿@page
+@model Web.Pages.Cuentas.IndexModel
+@{
+    ViewData["Title"] = "Mis Cuentas";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Mis Cuentas</h2>
+                <a href="/Cuentas/Create" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nueva Cuenta
+                </a>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            @if (Model.cuentas != null && Model.cuentas.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Saldo Negativo</th>
+                                <th>Fecha Creación</th>
+                                <th>Última Modificación</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cuenta in Model.cuentas)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@cuenta.Nombre</strong>
+                                    </td>
+                                    <td>@cuenta.Descripcion</td>
+                                    <td class="text-center">
+                                        <span class="badge @(cuenta.PermitirSalarioNegativo ? "bg-warning" : "bg-info")">
+                                            @(cuenta.PermitirSalarioNegativo ? "Permitido" : "No Permitido")
+                                        </span>
+                                    </td>
+                                    <td>@cuenta.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                    <td>@cuenta.FechaUltimaModificacion.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        <span class="badge @(cuenta.Estado ? "bg-success" : "bg-danger")">
+                                            @(cuenta.Estado ? "Activa" : "Inactiva")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="/Movimiento?id=@cuenta.idCuenta" class="btn btn-sm btn-primary" title="Ver Movimientos">
+                                                <i class="fas fa-list"></i>
+                                            </a>
+                                            <a href="/Cuentas/Edit?id=@cuenta.idCuenta" class="btn btn-sm btn-warning" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="/Cuentas/Details?id=@cuenta.idCuenta" class="btn btn-sm btn-info" title="Detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <p class="text-muted">
+                        <small>Total de cuentas: @Model.cuentas.Count</small>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No tienes cuentas registradas</h4>
+                    <p>Comienza creando tu primera cuenta para gestionar tus finanzas.</p>
+                    <a href="/Cuentas/Create" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Crear Primera Cuenta
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Inicializar tooltips de Bootstrap si están disponibles
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}

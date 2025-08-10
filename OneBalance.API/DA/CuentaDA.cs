@@ -88,6 +88,13 @@ namespace DA
             return resultadoQuery.FirstOrDefault();
         }
 
+        public async Task<IEnumerable<CuentaResponse>> ObtenerentasPorUsuario(Guid idUsuario)
+        {
+            string sqlQuery = "sp_Cuenta_ObtenerPorUsuario";
+
+            return await _sqlConnection.QueryAsync<CuentaResponse>(sqlQuery, new { idUsuario });
+        }
+
         private async Task VerificarExistenciaCuenta(Guid id)
         {
             var cuentaCheck = await ObtenerCuentaPorId(id);

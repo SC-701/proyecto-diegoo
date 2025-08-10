@@ -15,5 +15,6 @@ namespace Abstracciones.Interfaces.DA
         Task<Guid> CrearCuenta(CuentaRequest cuenta);
         Task<Guid> EditarCuenta(Guid id, CuentaRequest cuenta);
         Task<Guid> EliminarCuenta(Guid id);
+        Task<IEnumerable<CuentaResponse>> ObtenerentasPorUsuario(Guid idUsuario);
     }
 }
