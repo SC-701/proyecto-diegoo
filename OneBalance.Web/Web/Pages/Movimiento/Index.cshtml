@@ -1,77 +1,232 @@
-﻿@page
+﻿@page "{id:guid?}"
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Movimientos de Cuenta";
 }
 
 <div class="container mt-4">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3>Consultar Movimientos de Cuenta</h3>
-                <a href="/Movimiento/Agregar" class="btn btn-success">
-                    <i class="fas fa-plus"></i>
-                    Agregar Movimiento
-                </a>
+        <div class="col-md-10 offset-md-1">
+            <!-- Header con información de la cuenta -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0">
+                                <i class="fas fa-exchange-alt"></i>
+                                Movimientos de Cuenta
+                            </h4>
+                            @if (!string.IsNullOrEmpty(Model.NombreCuenta))
+                            {
+                                <small class="text-light">@Model.NombreCuenta</small>
+                            }
+                        </div>
+                        <div>
+                            <a href="/Cuentas/Index" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-arrow-left"></i>
+                                Volver a Cuentas
+                            </a>
+                            @if (Model.IdCuenta.HasValue)
+                            {
+                                <a href="/Movimiento/Agregar?idCuenta=@Model.IdCuenta" class="btn btn-success">
+                                    <i class="fas fa-plus"></i>
+                                    Nuevo Movimiento
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <form method="get" class="mb-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="id" placeholder="Ingrese el ID de la cuenta (GUID)"
-                           value="@Request.Query["id"]" required>
-                    <button class="btn btn-primary" type="submit">Consultar</button>
-                </div>
-            </form>
-
-            @if (!ViewData.ModelState.IsValid)
+            <!-- Manejo de errores -->
+            @if (Model.HasError)
             {
                 <div class="alert alert-danger">
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <p>@error.ErrorMessage</p>
-                    }
+                    <h5><i class="fas fa-exclamation-triangle"></i> Error</h5>
+                    <p>@Model.ErrorMessage</p>
+                    <a href="/Cuentas/Index" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver a Mis Cuentas
+                    </a>
                 </div>
             }
+            else if (Model.movimientos != null && Model.movimientos.Any())
+            {
+                <!-- Tabla de movimientos -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list"></i>
+                            Últimos Movimientos (@Model.movimientos.Count)
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th><i class="fas fa-calendar"></i> Fecha</th>
+                                        <th><i class="fas fa-edit"></i> Descripción</th>
+                                        <th><i class="fas fa-money-bill"></i> Monto</th>
+                                        <th><i class="fas fa-toggle-on"></i> Estado</th>
+                                        <th><i class="fas fa-cogs"></i> Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var movimiento in Model.movimientos)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <small class="text-muted">
+                                                    @movimiento.Fecha.ToString("dd/MM/yyyy")
+                                                </small><br>
+                                                <small>@movimiento.Fecha.ToString("HH:mm")</small>
+                                            </td>
+                                            <td>
+                                                <strong>@movimiento.Descripcion</strong>
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold text-primary">
+                                                    ₡@movimiento.MontoOriginal.ToString("N2")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge @(movimiento.Estado ? "bg-success" : "bg-danger")">
+                                                    @(movimiento.Estado ? "Activo" : "Inactivo")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="/Movimiento/Editar/@movimiento.idMovimiento"
+                                                       class="btn btn-sm btn-warning" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="/Movimiento/Details/@movimiento.idMovimiento"
+                                                       class="btn btn-sm btn-info" title="Ver Detalles">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                            title="Eliminar"
+                                                            onclick="confirmarEliminacion('@movimiento.idMovimiento', '@movimiento.Descripcion')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-            @if (Model.movimientos != null && Model.movimientos.Any())
-            {
-                <h4>Últimos 5 Movimientos</h4>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Descripción</th>
-                                <th>Monto Original</th>
-                                <th>Moneda</th>
-                                <th>Monto CRC</th>
-                                <th>Tasa Cambio</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var movimiento in Model.movimientos)
-                            {
-                                <tr>
-                                    <td>@movimiento.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td>@movimiento.Descripcion</td>
-                                    <td>
-                                        <span class="badge @(movimiento.Estado ? "bg-success" : "bg-danger")">
-                                            @(movimiento.Estado ? "Activo" : "Inactivo")
-                                        </span>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <!-- Información adicional -->
+                <div class="mt-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Mostrando los últimos @Model.movimientos.Count movimiento(s)
+                            </small>
+                        </div>
+                    </div>
                 </div>
             }
-            else if (Request.Query.ContainsKey("id") && ViewData.ModelState.IsValid)
+            else if (Model.IdCuenta.HasValue)
             {
-                <div class="alert alert-info">
-                    <p>No se encontraron movimientos para la cuenta especificada.</p>
+                <!-- Estado sin movimientos -->
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-inbox fa-4x text-muted"></i>
+                        </div>
+                        <h4 class="text-muted">Esta cuenta no tiene movimientos</h4>
+                        <p class="text-muted mb-4">
+                            Comienza registrando el primer movimiento para esta cuenta.
+                            Puedes agregar ingresos, gastos o transferencias.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="/Movimiento/Agregar?idCuenta=@Model.IdCuenta" class="btn btn-success btn-lg">
+                                <i class="fas fa-plus"></i>
+                                Crear Primer Movimiento
+                            </a>
+                            <a href="/Cuentas/Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left"></i>
+                                Volver a Mis Cuentas
+                            </a>
+                        </div>
+
+                        <!-- Sugerencias -->
+                        <div class="mt-4">
+                            <small class="text-muted">
+                                <strong>Sugerencias:</strong> Puedes registrar el saldo inicial de la cuenta,
+                                ingresos recibidos, gastos realizados o transferencias entre cuentas.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
     </div>
 </div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro de que desea eliminar el movimiento <strong id="movimientoDescripcion"></strong>?</p>
+                <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Función para confirmar eliminación
+        function confirmarEliminacion(movimientoId, descripcion) {
+            document.getElementById('movimientoDescripcion').textContent = descripcion;
+            document.getElementById('deleteForm').action = '/Movimiento/Delete/' + movimientoId;
+
+            var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+
+        // Inicializar tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+
+    <style>
+        .card-header {
+            border-bottom: 1px solid rgba(0,0,0,.125);
+        }
+
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .btn-group .btn {
+            margin: 0 1px;
+        }
+
+        .fa-4x {
+            font-size: 4rem;
+        }
+    </style>
+}
