@@ -33,9 +33,6 @@ namespace DA
                 idTipoPago = movimiento.IdTipoPago,
                 descripcion = movimiento.Descripcion,
                 montoOriginal = movimiento.MontoOriginal,
-                monedaOriginal = movimiento.MonedaOriginal,
-                montoCrc = movimiento.MontoCrc,
-                tasaCambio = movimiento.TasaCambio,
                 fecha = movimiento.Fecha,
                 estado = movimiento.Estado
             });
@@ -55,10 +52,7 @@ namespace DA
                 idCategoria = movimiento.IdCategoria,
                 idTipoPago = movimiento.IdTipoPago,
                 descripcion = movimiento.Descripcion,
-                montoOriginal = movimiento.MontoOriginal,
-                monedaOriginal = movimiento.MonedaOriginal,
-                montoCrc = movimiento.MontoCrc,
-                tasaCambio = movimiento.TasaCambio,                
+                montoOriginal = movimiento.MontoOriginal,               
                 estado = movimiento.Estado
             });
 

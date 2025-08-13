@@ -14,11 +14,6 @@ namespace Abstracciones.Modelos
 
         [Required(ErrorMessage = "Debe indicar el monto inicial de la cuenta")]
         public decimal MontoOriginal { get; set; }
-
-        public string MonedaOriginal { get; set; }
-
-        public decimal MontoCrc { get; set; }
-        public decimal TasaCambio { get; set; }
         public DateTime Fecha { get; set; }        
         public bool Estado { get; set; }
     }
