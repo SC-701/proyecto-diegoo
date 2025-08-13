@@ -7,7 +7,13 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <h3>Consultar Movimientos de Cuenta</h3>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Consultar Movimientos de Cuenta</h3>
+                <a href="/Movimiento/Agregar" class="btn btn-success">
+                    <i class="fas fa-plus"></i>
+                    Agregar Movimiento
+                </a>
+            </div>
 
             <form method="get" class="mb-4">
                 <div class="input-group">
@@ -49,32 +55,6 @@
                                 <tr>
                                     <td>@movimiento.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td>@movimiento.Descripcion</td>
-                                    <td class="text-end">
-                                        @if (movimiento.MonedaOriginal == "CRC")
-                                        {
-                                            <text>₡@movimiento.MontoOriginal.ToString("N2")</text>
-                                        }
-                                        else if (movimiento.MonedaOriginal == "USD")
-                                        {
-                                            <text>$@movimiento.MontoOriginal.ToString("N2")</text>
-                                        }
-                                        else
-                                        {
-                                            <text>€@movimiento.MontoOriginal.ToString("N2")</text>
-                                        }
-                                    </td>
-                                    <td>@movimiento.MonedaOriginal</td>
-                                    <td class="text-end">₡@movimiento.MontoCrc.ToString("N2")</td>
-                                    <td class="text-end">
-                                        @if (movimiento.TasaCambio == 1)
-                                        {
-                                            <text>N/A</text>
-                                        }
-                                        else
-                                        {
-                                            <text>@movimiento.TasaCambio.ToString("F4")</text>
-                                        }
-                                    </td>
                                     <td>
                                         <span class="badge @(movimiento.Estado ? "bg-success" : "bg-danger")">
                                             @(movimiento.Estado ? "Activo" : "Inactivo")

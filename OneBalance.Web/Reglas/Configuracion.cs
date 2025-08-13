@@ -22,8 +22,7 @@ namespace Reglas
         {
             string urlBase = _configuracion.GetSection(seccion).Get<ApiEndpoint>().UrlBase;
 
-            var metodo = _configuracion.GetSection(seccion).Get<ApiEndpoint>().Metodos
-                .Where(m => m.Nombre == nombrePropiedad).FirstOrDefault().Valor;
+            var metodo = _configuracion.GetSection(seccion).Get<ApiEndpoint>().Metodos.Where(m => m.Nombre == nombrePropiedad).FirstOrDefault().Valor;
 
             return $"{urlBase}/{metodo}";
         }
