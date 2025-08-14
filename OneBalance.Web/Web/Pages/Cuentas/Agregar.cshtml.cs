@@ -39,7 +39,8 @@ namespace Web.Pages.Cuenta
             }
 
             Cuenta.idCuenta = Guid.NewGuid();
-            Cuenta.IdUsuario = Guid.Parse("5B435D27-6C13-489A-90A7-675C9FF6C622"); 
+            //Cuenta.IdUsuario = Guid.Parse("5B435D27-6C13-489A-90A7-675C9FF6C622"); 
+            Cuenta.IdUsuario = Guid.Parse("3A9C3399-15F3-4123-BEB8-96CB45AEB18D");
             Cuenta.FechaCreacion = DateTime.Now;
             Cuenta.FechaUltimaModificacion = DateTime.Now;
 

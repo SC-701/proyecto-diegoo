@@ -55,15 +55,16 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <strong><i class="fas fa-calendar-plus"></i> Fecha de Creación:</strong><br>
-                                            @Model.Cuenta.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                                            @(Model.Cuenta.FechaCreacion == DateTime.MinValue ? "No disponible" : Model.Cuenta.FechaCreacion.ToString("dd/MM/yyyy HH:mm"))
                                         </div>
                                         <div class="col-md-6">
                                             <strong><i class="fas fa-calendar-edit"></i> Última Modificación:</strong><br>
-                                            @Model.Cuenta.FechaUltimaModificacion.ToString("dd/MM/yyyy HH:mm")
+                                            @(Model.Cuenta.FechaUltimaModificacion == DateTime.MinValue ? "No disponible" : Model.Cuenta.FechaUltimaModificacion.ToString("dd/MM/yyyy HH:mm"))
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Cuenta.Nombre" class="form-label">

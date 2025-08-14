@@ -42,8 +42,7 @@ namespace Web.Pages.Movimiento
             Movimiento.idMovimiento = Guid.NewGuid();
 
             try
-            {
-                // CORREGIDO: Cambiar de "AgregarUsuario" a "AgregarMovimiento"
+            {                
                 string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "AgregarMovimiento");
 
                 HttpClient client = new HttpClient();
@@ -51,7 +50,7 @@ namespace Web.Pages.Movimiento
                 response.EnsureSuccessStatusCode();
 
                 TempData["SuccessMessage"] = "Movimiento agregado exitosamente.";
-                return RedirectToPage("./Index");
+                return RedirectToPage("./Index", new { id = Movimiento.IdCuenta });
             }
             catch (Exception ex)
             {
@@ -78,7 +77,8 @@ namespace Web.Pages.Movimiento
         private async Task CargarCuentasAsync()
         {
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCuentasPorUsuario");
-            string usuarioId = "5B435D27-6C13-489A-90A7-675C9FF6C622";
+            //string usuarioId = "5B435D27-6C13-489A-90A7-675C9FF6C622";
+            string usuarioId = "3A9C3399-15F3-4123-BEB8-96CB45AEB18D";
 
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, usuarioId));

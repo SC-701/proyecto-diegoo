@@ -28,8 +28,9 @@ namespace Web.Pages.Cuentas
             }
 
             try
-            {
-                await CargarDatos();
+            {                
+                await CargarCategorias();
+             
                 await CargarCuenta(id.Value);
 
                 return Page();
@@ -37,7 +38,20 @@ namespace Web.Pages.Cuentas
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, "Error al cargar la cuenta: " + ex.Message);
-                return RedirectToPage("./Index");
+                
+                try
+                {
+                    if (Categorias == null)
+                    {
+                        await CargarCategorias();
+                    }
+                }
+                catch
+                {
+                    Categorias = new SelectList(new List<CategoriaResponse>(), "idCategoria", "Nombre");
+                }
+
+                return Page();
             }
         }
 
@@ -48,7 +62,7 @@ namespace Web.Pages.Cuentas
                 await CargarDatos();
                 return Page();
             }
-
+            
             Cuenta.FechaUltimaModificacion = DateTime.Now;
 
             try
@@ -57,8 +71,20 @@ namespace Web.Pages.Cuentas
                 string url = string.Format(endpoint, Cuenta.idCuenta);
 
                 HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.PutAsJsonAsync(url, Cuenta);
-                response.EnsureSuccessStatusCode();
+                
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                HttpResponseMessage response = await client.PutAsJsonAsync(url, Cuenta, options);
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error {response.StatusCode}: {errorContent}");
+                }
 
                 TempData["SuccessMessage"] = "Cuenta actualizada exitosamente.";
                 return RedirectToPage("./Index");
@@ -74,10 +100,10 @@ namespace Web.Pages.Cuentas
         private async Task CargarCuenta(Guid id)
         {
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCuentaPorId");
-            string url = string.Format(endpoint, id);
+            //string url = string.Format(endpoint, id);
 
             HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, id));
             HttpResponseMessage response = await client.SendAsync(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -85,24 +111,36 @@ namespace Web.Pages.Cuentas
                 throw new Exception("La cuenta no existe.");
             }
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error {response.StatusCode} al obtener la cuenta: {errorContent}");
+            }
 
             string resultado = await response.Content.ReadAsStringAsync();
-            JsonSerializerOptions options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
 
             var cuentaResponse = JsonSerializer.Deserialize<CuentaResponse>(resultado, options);
 
             if (cuentaResponse != null)
             {
                 Cuenta.idCuenta = cuentaResponse.idCuenta;
-                Cuenta.Nombre = cuentaResponse.Nombre;
-                Cuenta.Descripcion = cuentaResponse.Descripcion;
+                Cuenta.Nombre = cuentaResponse.Nombre ?? string.Empty;
+                Cuenta.Descripcion = cuentaResponse.Descripcion ?? string.Empty;
                 Cuenta.idCategoria = cuentaResponse.idCategoria;
-                Cuenta.PermitirSalarioNegativo = cuentaResponse.PermitirSalarioNegativo;
-                Cuenta.FechaCreacion = cuentaResponse.FechaCreacion;
-                Cuenta.FechaUltimaModificacion = cuentaResponse.FechaUltimaModificacion;
+                Cuenta.PermitirSalarioNegativo = cuentaResponse.PermitirSalarioNegativo;                
+                Cuenta.FechaCreacion = cuentaResponse.FechaCreacion == DateTime.MinValue ? DateTime.Now : cuentaResponse.FechaCreacion;
+                Cuenta.FechaUltimaModificacion = cuentaResponse.FechaUltimaModificacion == DateTime.MinValue ? DateTime.Now : cuentaResponse.FechaUltimaModificacion;
                 Cuenta.Estado = cuentaResponse.Estado;
-                Cuenta.IdUsuario = Guid.Parse("5B435D27-6C13-489A-90A7-675C9FF6C622");
+                Cuenta.IdUsuario = Guid.Parse("3A9C3399-15F3-4123-BEB8-96CB45AEB18D");
+            }
+            else
+            {
+                throw new Exception("No se pudo deserializar la respuesta de la API.");
             }
         }
 
@@ -114,7 +152,8 @@ namespace Web.Pages.Cuentas
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Error al cargar los datos: " + ex.Message);
+                ModelState.AddModelError(string.Empty, "Error al cargar los datos: " + ex.Message);                
+                Categorias = new SelectList(new List<CategoriaResponse>(), "idCategoria", "Nombre");
             }
         }
 
@@ -125,13 +164,22 @@ namespace Web.Pages.Cuentas
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
             HttpResponseMessage response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error {response.StatusCode} al obtener categorías: {errorContent}");
+            }
 
             string resultado = await response.Content.ReadAsStringAsync();
-            JsonSerializerOptions options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
 
             var categorias = JsonSerializer.Deserialize<IList<CategoriaResponse>>(resultado, options) ?? new List<CategoriaResponse>();
-
+            
             Categorias = new SelectList(categorias.Where(c => c.Estado), "idCategoria", "Nombre", Cuenta.idCategoria);
         }
     }

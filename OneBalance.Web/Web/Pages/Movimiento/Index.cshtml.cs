@@ -100,8 +100,7 @@ namespace Web.Pages.Movimiento
                     movimientos = movimientosResult ?? new List<MovimientoResponse>();
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    // No hay movimientos, pero no es un error
+                {                
                     movimientos = new List<MovimientoResponse>();
                 }
                 else
@@ -111,8 +110,7 @@ namespace Web.Pages.Movimiento
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogWarning(ex, "Error de red al obtener movimientos para la cuenta {CuentaId}", idCuenta);
-                // No lanzar excepción, simplemente no hay movimientos disponibles
+                _logger.LogWarning(ex, "Error de red al obtener movimientos para la cuenta {CuentaId}", idCuenta);                
                 movimientos = new List<MovimientoResponse>();
             }
             catch (JsonException ex)
