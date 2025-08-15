@@ -50,6 +50,40 @@ namespace Web.Pages.Movimiento
             }
         }
 
+        // Agregar este método al Index.cshtml.cs de Movimiento
+
+        public async Task<IActionResult> OnPostDelete(Guid id, Guid idCuenta)
+        {
+            try
+            {
+                string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EliminarMovimiento");
+
+                using (HttpClient client = new HttpClient())
+                {
+                    string url = string.Format(endpoint, id);
+                    HttpResponseMessage response = await client.DeleteAsync(url);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Movimiento eliminado exitosamente.";
+                    }
+                    else
+                    {
+                        string errorContent = await response.Content.ReadAsStringAsync();
+                        TempData["ErrorMessage"] = $"Error al eliminar el movimiento: {errorContent}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al eliminar el movimiento: {ex.Message}";
+            }
+
+            return RedirectToPage(new { id = idCuenta });
+        }
+
+
+
         private async Task CargarInformacionCuenta(Guid idCuenta)
         {
             try
