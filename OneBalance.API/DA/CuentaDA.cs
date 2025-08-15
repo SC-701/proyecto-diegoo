@@ -65,7 +65,7 @@ namespace DA
 
             string sqlQuery = @"sp_Cuenta_Eliminar";
 
-            var resultadoQuery = await _sqlConnection.ExecuteScalarAsync<Guid>(sqlQuery, new { id });
+            var resultadoQuery = await _sqlConnection.ExecuteScalarAsync<Guid>(sqlQuery, new { idCuenta = id });
 
             return resultadoQuery;
         }

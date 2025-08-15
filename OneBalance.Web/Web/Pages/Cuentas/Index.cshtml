@@ -14,6 +14,24 @@
                 </a>
             </div>
 
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle"></i>
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-danger">
@@ -61,24 +79,24 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a type="button" class="btn btn-sm btn-primary" asp-page="../Movimiento/Index" asp-route-id="@cuenta.idCuenta">
+                                            <a type="button" class="btn btn-sm btn-primary" asp-page="../Movimiento/Index" asp-route-id="@cuenta.idCuenta" title="Ver Movimientos">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16">
                                                     <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
                                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                                                     <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
                                                 </svg>
                                             </a>
-                                            <a type="button" class="btn btn-sm btn-warning" asp-page="./Editar" asp-route-id="@cuenta.idCuenta">
+                                            <a type="button" class="btn btn-sm btn-warning" asp-page="./Editar" asp-route-id="@cuenta.idCuenta" title="Editar">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
                                                     <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z" />
                                                 </svg>
                                             </a>
-                                            <a href="/Cuentas/Details?id=@cuenta.idCuenta" class="btn btn-sm btn-danger" title="Eliminar">
+                                            <button type="button" class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacion('@cuenta.idCuenta', '@cuenta.Nombre')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
                                                 </svg>
-                                            </a>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -98,7 +116,7 @@
                 <div class="alert alert-info text-center">
                     <h4>No tienes cuentas registradas</h4>
                     <p>Comienza creando tu primera cuenta para gestionar tus finanzas.</p>
-                    <a href="/Cuentas/Create" class="btn btn-success">
+                    <a href="/Cuentas/Agregar" class="btn btn-success">
                         <i class="fas fa-plus"></i> Crear Primera Cuenta
                     </a>
                 </div>
@@ -107,12 +125,92 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteCuentaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Confirmar Eliminación de Cuenta
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-wallet fa-3x text-danger"></i>
+                </div>
+                <p class="text-center mb-3">
+                    ¿Está seguro de que desea eliminar la cuenta <strong id="cuentaNombre"></strong>?
+                </p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Advertencia:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Esta acción no se puede deshacer</li>
+                        <li>Se eliminarán todos los movimientos asociados</li>
+                        <li>Se perderá todo el historial de transacciones</li>
+                    </ul>
+                </div>
+                <p class="text-center text-muted">
+                    <small>Por favor, confirme que desea continuar con la eliminación.</small>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <form id="deleteCuentaForm" method="post" style="display: inline;" asp-page-handler="Delete">
+                    <input type="hidden" id="cuentaIdInput" name="id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Eliminar Cuenta
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        // Inicializar tooltips de Bootstrap si están disponibles
+        function confirmarEliminacion(cuentaId, nombreCuenta) {
+            document.getElementById('cuentaNombre').textContent = nombreCuenta;
+            document.getElementById('cuentaIdInput').value = cuentaId;
+
+            var modal = new bootstrap.Modal(document.getElementById('deleteCuentaModal'));
+            modal.show();
+        }
+
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
+
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
     </script>
+
+    <style>
+        .modal-header.bg-danger {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .fa-3x {
+            font-size: 3rem;
+        }
+
+        .btn-group .btn {
+            margin: 0 1px;
+        }
+
+        .alert-warning {
+            border-left: 4px solid #ffc107;
+        }
+    </style>
 }
