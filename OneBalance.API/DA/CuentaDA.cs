@@ -83,9 +83,7 @@ namespace DA
         {
             string sqlQuery = @"sp_Cuenta_ObtenerPorId";
 
-            var resultadoQuery = await _sqlConnection.QueryAsync<CuentaResponse>(sqlQuery, new { id });
-
-            return resultadoQuery.FirstOrDefault();
+            return await _sqlConnection.QueryFirstOrDefaultAsync<CuentaResponse>(sqlQuery, new { idCuenta = id });
         }
 
         public async Task<IEnumerable<CuentaResponse>> ObtenerentasPorUsuario(Guid idUsuario)

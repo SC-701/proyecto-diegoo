@@ -17,30 +17,30 @@
                 <div class="card-body">
                     @if (TempData["SuccessMessage"] != null)
                     {
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <i class="fas fa-check-circle"></i>
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <i class="fas fa-check-circle"></i>
                             @TempData["SuccessMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
                     }
 
                     @if (!ViewData.ModelState.IsValid)
                     {
-                        <div class="alert alert-danger">
-                            <h6><i class="fas fa-exclamation-triangle"></i> Por favor corrija los siguientes errores:</h6>
-                            <ul class="mb-0">
+                            <div class="alert alert-danger">
+                                <h6><i class="fas fa-exclamation-triangle"></i> Por favor corrija los siguientes errores:</h6>
+                                <ul class="mb-0">
                                 @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                                 {
-                                    <li>@error.ErrorMessage</li>
+                                            <li>@error.ErrorMessage</li>
                                 }
-                            </ul>
-                        </div>
+                                </ul>
+                            </div>
                     }
 
                     <form method="post" id="cuentaForm">
-                        <input type="hidden" asp-for="Cuenta.idCuenta" />
-                        <input type="hidden" asp-for="Cuenta.IdUsuario" />
-                        <input type="hidden" asp-for="Cuenta.FechaCreacion" />
+                        <input type="hidden" asp-for="cuenta.idCuenta" />
+                        <input type="hidden" asp-for="cuenta.FechaCreacion" />
+                        <input type="hidden" asp-for="cuenta.IdUsuario" />
 
                         <div class="row">
                             <div class="col-md-12">
@@ -50,52 +50,54 @@
                                 </h5>
                             </div>
 
-                            <div class="col-md-12 mb-3">
-                                <div class="alert alert-info">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <strong><i class="fas fa-calendar-plus"></i> Fecha de Creación:</strong><br>
-                                            @(Model.Cuenta.FechaCreacion == DateTime.MinValue ? "No disponible" : Model.Cuenta.FechaCreacion.ToString("dd/MM/yyyy HH:mm"))
-                                        </div>
-                                        <div class="col-md-6">
-                                            <strong><i class="fas fa-calendar-edit"></i> Última Modificación:</strong><br>
-                                            @(Model.Cuenta.FechaUltimaModificacion == DateTime.MinValue ? "No disponible" : Model.Cuenta.FechaUltimaModificacion.ToString("dd/MM/yyyy HH:mm"))
+                            @if (Model.cuenta != null)
+                            {
+                                    <div class="col-md-12 mb-3">
+                                        <div class="alert alert-info">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <strong><i class="fas fa-calendar-plus"></i> Fecha de Creación:</strong><br>
+                                                @(Model.cuenta.FechaCreacion == DateTime.MinValue ? "No disponible" : Model.cuenta.FechaCreacion.ToString("dd/MM/yyyy HH:mm"))
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong><i class="fas fa-calendar-edit"></i> Última Modificación:</strong><br>
+                                                @(Model.cuenta.FechaUltimaModificacion == DateTime.MinValue ? "No disponible" : Model.cuenta.FechaUltimaModificacion.ToString("dd/MM/yyyy HH:mm"))
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
+                            }
 
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Cuenta.Nombre" class="form-label">
+                                <label asp-for="cuenta.Nombre" class="form-label">
                                     <i class="fas fa-tag"></i>
                                     Nombre de la Cuenta *
                                 </label>
-                                <input asp-for="Cuenta.Nombre" class="form-control"
+                                <input asp-for="cuenta.Nombre" class="form-control"
                                        placeholder="Ej: Cuenta Corriente BAC" maxlength="100" />
-                                <span asp-validation-for="Cuenta.Nombre" class="text-danger"></span>
+                                <span asp-validation-for="cuenta.Nombre" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Cuenta.idCategoria" class="form-label">
+                                <label asp-for="categoriaSeleccionada" class="form-label">
                                     <i class="fas fa-tags"></i>
                                     Tipo de Cuenta *
                                 </label>
-                                <select asp-for="Cuenta.idCategoria" asp-items="Model.Categorias" class="form-select">
+                                <select asp-for="categoriaSeleccionada" asp-items="Model.categorias" class="form-select">
                                     <option value="">-- Seleccione un tipo --</option>
                                 </select>
-                                <span asp-validation-for="Cuenta.idCategoria" class="text-danger"></span>
+                                <span asp-validation-for="categoriaSeleccionada" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <label asp-for="Cuenta.Descripcion" class="form-label">
+                                <label asp-for="cuenta.Descripcion" class="form-label">
                                     <i class="fas fa-edit"></i>
                                     Descripción *
                                 </label>
-                                <textarea asp-for="Cuenta.Descripcion" class="form-control" rows="3"
+                                <textarea asp-for="cuenta.Descripcion" class="form-control" rows="3"
                                           placeholder="Ingrese una descripción detallada de la cuenta"
                                           maxlength="500"></textarea>
-                                <span asp-validation-for="Cuenta.Descripcion" class="text-danger"></span>
+                                <span asp-validation-for="cuenta.Descripcion" class="text-danger"></span>
                                 <small class="form-text text-muted">Máximo 500 caracteres</small>
                             </div>
 
@@ -112,8 +114,8 @@
                                     Opciones de Saldo
                                 </label>
                                 <div class="form-check form-switch">
-                                    <input asp-for="Cuenta.PermitirSalarioNegativo" class="form-check-input" type="checkbox" />
-                                    <label asp-for="Cuenta.PermitirSalarioNegativo" class="form-check-label">
+                                    <input asp-for="cuenta.PermitirSalarioNegativo" class="form-check-input" type="checkbox" />
+                                    <label asp-for="cuenta.PermitirSalarioNegativo" class="form-check-label">
                                         Permitir saldo negativo
                                     </label>
                                 </div>
@@ -128,8 +130,8 @@
                                     Estado de la Cuenta
                                 </label>
                                 <div class="form-check form-switch">
-                                    <input asp-for="Cuenta.Estado" class="form-check-input" type="checkbox" />
-                                    <label asp-for="Cuenta.Estado" class="form-check-label">
+                                    <input asp-for="cuenta.Estado" class="form-check-input" type="checkbox" />
+                                    <label asp-for="cuenta.Estado" class="form-check-label">
                                         Cuenta activa
                                     </label>
                                 </div>
@@ -148,10 +150,13 @@
                                         Cancelar
                                     </a>
                                     <div>
-                                        <a href="/Cuentas/Details/@Model.Cuenta.idCuenta" class="btn btn-info me-2">
-                                            <i class="fas fa-eye"></i>
-                                            Ver Detalles
-                                        </a>
+                                        @if (Model.cuenta != null)
+                                        {
+                                                <a href="/Movimiento/Index/@Model.cuenta.idCuenta" class="btn btn-info me-2">
+                                                    <i class="fas fa-exchange-alt"></i>
+                                                    Ver Movimientos
+                                                </a>
+                                        }
                                         <button type="submit" class="btn btn-warning">
                                             <i class="fas fa-save"></i>
                                             Actualizar Cuenta
@@ -168,109 +173,119 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const descripcionTextarea = document.querySelector('textarea[name="Cuenta.Descripcion"]');
-            if (descripcionTextarea) {
-                const maxLength = 500;
-                const counter = document.createElement('small');
-                counter.className = 'form-text text-muted mt-1';
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const descripcionTextarea = document.querySelector('textarea[name="cuenta.Descripcion"]');
+                if (descripcionTextarea) {
+                    const maxLength = 500;
+                    const counter = document.createElement('small');
+                    counter.className = 'form-text text-muted mt-1';
 
-                function updateCounter() {
-                    const currentLength = descripcionTextarea.value.length;
-                    counter.innerHTML = `<span id="charCount">${currentLength}</span>/${maxLength} caracteres`;
+                    function updateCounter() {
+                        const currentLength = descripcionTextarea.value.length;
+                        counter.innerHTML = `<span id="charCount">${currentLength}</span>/${maxLength} caracteres`;
 
-                    if (currentLength > maxLength - 50) {
-                        counter.className = 'form-text text-warning mt-1';
-                    } else {
-                        counter.className = 'form-text text-muted mt-1';
+                        if (currentLength > maxLength - 50) {
+                            counter.className = 'form-text text-warning mt-1';
+                        } else {
+                            counter.className = 'form-text text-muted mt-1';
+                        }
                     }
+
+                    descripcionTextarea.parentNode.appendChild(counter);
+                    updateCounter(); 
+
+                    descripcionTextarea.addEventListener('input', updateCounter);
                 }
+            });
 
-                descripcionTextarea.parentNode.appendChild(counter);
-                updateCounter(); 
+            document.getElementById('cuentaForm').addEventListener('submit', function(e) {
+                const requiredFields = ['Nombre', 'Descripcion'];
+                let isValid = true;
 
-                descripcionTextarea.addEventListener('input', updateCounter);
-            }
-        });
+                requiredFields.forEach(field => {
+                    const input = document.querySelector(`[name="cuenta.${field}"]`);
+                    if (!input || !input.value.trim()) {
+                        isValid = false;
+                        if (input) {
+                            input.classList.add('is-invalid');
+                        }
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
 
-        document.getElementById('cuentaForm').addEventListener('submit', function(e) {
-            const requiredFields = ['Nombre', 'Descripcion', 'idCategoria'];
-            let isValid = true;
-
-            requiredFields.forEach(field => {
-                const input = document.querySelector(`[name="Cuenta.${field}"]`);
-                if (!input || !input.value.trim()) {
+                const categoriaSelect = document.querySelector('[name="categoriaSeleccionada"]');
+                if (!categoriaSelect || !categoriaSelect.value) {
                     isValid = false;
-                    if (input) {
-                        input.classList.add('is-invalid');
+                    if (categoriaSelect) {
+                        categoriaSelect.classList.add('is-invalid');
                     }
                 } else {
-                    input.classList.remove('is-invalid');
+                    categoriaSelect.classList.remove('is-invalid');
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Por favor complete todos los campos requeridos.');
                 }
             });
 
-            if (!isValid) {
-                e.preventDefault();
-                alert('Por favor complete todos los campos requeridos.');
-            }
-        });
-
-        document.querySelectorAll('input, select, textarea').forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('is-invalid');
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                });
             });
-        });
 
-        document.querySelector('input[name="Cuenta.Estado"]').addEventListener('change', function() {
-            if (!this.checked) {
-                const confirm = window.confirm('¿Está seguro de que desea desactivar esta cuenta? Una cuenta inactiva no aparecerá en las listas de selección.');
-                if (!confirm) {
-                    this.checked = true;
+            document.querySelector('input[name="cuenta.Estado"]').addEventListener('change', function() {
+                if (!this.checked) {
+                    const confirm = window.confirm('¿Está seguro de que desea desactivar esta cuenta? Una cuenta inactiva no aparecerá en las listas de selección.');
+                    if (!confirm) {
+                        this.checked = true;
+                    }
                 }
+            });
+        </script>
+
+        <style>
+            .card-header {
+                border-bottom: 1px solid rgba(0,0,0,.125);
             }
-        });
-    </script>
 
-    <style>
-        .card-header {
-            border-bottom: 1px solid rgba(0,0,0,.125);
-        }
+            .form-label {
+                font-weight: 600;
+            }
 
-        .form-label {
-            font-weight: 600;
-        }
+            .form-control:focus, .form-select:focus {
+                border-color: #ffc107;
+                box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+            }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #ffc107;
-            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
-        }
+            .is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+            }
 
-        .is-invalid {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
+            .btn {
+                padding: 0.5rem 1.5rem;
+            }
 
-        .btn {
-            padding: 0.5rem 1.5rem;
-        }
+            .alert {
+                border-radius: 0.375rem;
+            }
 
-        .alert {
-            border-radius: 0.375rem;
-        }
+            .form-check-input:checked {
+                background-color: #ffc107;
+                border-color: #ffc107;
+            }
 
-        .form-check-input:checked {
-            background-color: #ffc107;
-            border-color: #ffc107;
-        }
+            .text-warning {
+                color: #ffc107 !important;
+            }
 
-        .text-warning {
-            color: #ffc107 !important;
-        }
-
-        .bg-warning {
-            background-color: #ffc107 !important;
-        }
-    </style>
+            .bg-warning {
+                background-color: #ffc107 !important;
+            }
+        </style>
 }
