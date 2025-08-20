@@ -19,6 +19,7 @@ namespace Web.Pages.Categoria
 
         public void OnGet()
         {
+            Categoria.Estado = true;
         }
 
         public async Task<ActionResult> OnPost()

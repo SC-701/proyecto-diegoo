@@ -10,7 +10,7 @@ namespace Web.Pages.TipoPago
         private IConfiguracion _configuracion;
 
         [BindProperty]
-        public TipoPagoRequest TipoPago { get; set; }
+        public TipoPagoRequest TipoPago { get; set; } = new TipoPagoRequest();
 
         public AgregarModel(IConfiguracion configuracion)
         {
@@ -19,6 +19,7 @@ namespace Web.Pages.TipoPago
 
         public void OnGet()
         {
+            TipoPago.activestado = true;
         }
 
         public async Task<ActionResult> OnPost()
@@ -28,13 +29,26 @@ namespace Web.Pages.TipoPago
                 return Page();
             }
 
-            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "AgregarTipoPago");
+            TipoPago.idTipoPago = Guid.NewGuid();
 
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, TipoPago);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "AgregarTipoPago");
 
-            return RedirectToPage("./Index");
+                using (HttpClient client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, TipoPago);
+                    response.EnsureSuccessStatusCode();
+
+                    TempData["SuccessMessage"] = "Tipo de pago creado exitosamente.";
+                    return RedirectToPage("./Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error al crear el tipo de pago: " + ex.Message);
+                return Page();
+            }
         }
     }
 }

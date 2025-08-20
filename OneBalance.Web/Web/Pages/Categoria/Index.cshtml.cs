@@ -33,5 +33,35 @@ namespace Web.Pages.Categoria
 
             categorias = JsonSerializer.Deserialize<List<CategoriaResponse>>(resultado, options);
         }
+
+        public async Task<IActionResult> OnPostDelete(Guid id)
+        {
+            try
+            {
+                string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EliminarCategoria");
+
+                using (HttpClient client = new HttpClient())
+                {
+                    string url = string.Format(endpoint, id);
+                    HttpResponseMessage response = await client.DeleteAsync(url);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Categoría eliminada exitosamente.";
+                    }
+                    else
+                    {
+                        string errorContent = await response.Content.ReadAsStringAsync();
+                        TempData["ErrorMessage"] = $"Error al eliminar la categoría: {errorContent}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al eliminar la categoría: {ex.Message}";
+            }
+
+            return RedirectToPage();
+        }
     }
 }

@@ -33,5 +33,62 @@ namespace Web.Pages.TipoPago
 
             tiposPago = JsonSerializer.Deserialize<List<TipoPagoResponse>>(resultado, options);
         }
+
+        public async Task<IActionResult> OnPostDelete(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "ID de tipo de pago inválido.";
+                    return RedirectToPage();
+                }
+
+                string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EliminarTipoPago");
+
+                using (HttpClient client = new HttpClient())
+                {
+                    string url = string.Format(endpoint, id);
+                    client.Timeout = TimeSpan.FromSeconds(30);
+
+                    HttpResponseMessage response = await client.DeleteAsync(url);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Tipo de pago eliminado exitosamente.";
+                    }
+                    else
+                    {
+                        string errorContent = await response.Content.ReadAsStringAsync();
+                        var errorMessage = $"Error {response.StatusCode}";
+
+                        if (!string.IsNullOrEmpty(errorContent))
+                        {
+                            errorMessage += $": {errorContent}";
+                        }
+
+                        Console.WriteLine($"Error eliminando tipo de pago {id}: {response.StatusCode} - {errorContent}");
+                        TempData["ErrorMessage"] = errorMessage;
+                    }
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                TempData["ErrorMessage"] = $"Error de conexión al eliminar el tipo de pago: {httpEx.Message}";
+                Console.WriteLine($"HttpRequestException: {httpEx}");
+            }
+            catch (TaskCanceledException timeoutEx)
+            {
+                TempData["ErrorMessage"] = "La operación de eliminación excedió el tiempo límite.";
+                Console.WriteLine($"TaskCanceledException: {timeoutEx}");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error inesperado al eliminar el tipo de pago: {ex.Message}";
+                Console.WriteLine($"Exception: {ex}");
+            }
+
+            return RedirectToPage();
+        }
     }
 }

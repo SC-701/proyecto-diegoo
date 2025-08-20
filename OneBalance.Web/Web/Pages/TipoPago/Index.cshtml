@@ -1,52 +1,195 @@
 ﻿@page
 @model Web.Pages.TipoPago.IndexModel
 @{
+    ViewData["Title"] = "Tipos de Pago";
 }
-<div class="container">
-    <div class="row align-items-center">
-        <div class="col">
-            <h1>Listado de tipos de pago</h1>
-        </div>
-        <div class="col-auto ms-auto">
-            <a class="btn btn-primary" asp-page="./Agregar">Nuevo tipo de pago</a>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Tipos de Pago</h2>
+                <a href="/TipoPago/Agregar" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nuevo Tipo de Pago
+                </a>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle"></i>
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            @if (Model.tiposPago != null && Model.tiposPago.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tipoPago in Model.tiposPago)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@tipoPago.nombre</strong>
+                                    </td>
+                                    <td>@tipoPago.descripcion</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-sm btn-warning" asp-page="./Editar" asp-route-id="@tipoPago.idTipoPago" title="Editar">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z" />
+                                                </svg>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacion('@tipoPago.idTipoPago', '@tipoPago.nombre')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <p class="text-muted">
+                        <small>Total de tipos de pago: @Model.tiposPago.Count</small>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No tienes tipos de pago registrados</h4>
+                    <p>Comienza creando tu primer tipo de pago para organizar tus movimientos.</p>
+                    <a href="/TipoPago/Agregar" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Crear Primer Tipo de Pago
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        @if (Model.tiposPago != null)
-        {
-            @foreach (var tipoPago in Model.tiposPago)
-            {
-                <div class="col-md-4 my-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title">
-                                <p>
-                                    <span class="fw-bold">Nombre:</span> @tipoPago.nombre
-                                </p>
-                            </div>
-                            <p>
-                                <span class="fw-semibold">Descripcion:</span> @tipoPago.descripcion
-                            </p>
-                            <div>
-                                <a type="button" class="btn btn-info" asp-page="./Detalle" asp-route-id="@tipoPago.idTipoPago">Detalle</a>
-                                <a type="button" class="btn btn-warning" asp-page="./Editar" asp-route-id="@tipoPago.idTipoPago">Editar</a>
-                                <a type="button" class="btn btn-danger" asp-page="./Eliminar" asp-route-id="@tipoPago.idTipoPago">Eliminar</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col">
-                <h3>
-                    no hay tipos de pago registrados
-                </h3>
+<!-- Modal de confirmación para eliminar tipo de pago -->
+<div class="modal fade" id="deleteTipoPagoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Confirmar Eliminación de Tipo de Pago
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-        }
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-credit-card fa-3x text-danger"></i>
+                </div>
+                <p class="text-center mb-3">
+                    ¿Está seguro de que desea eliminar el tipo de pago <strong id="tipoPagoNombre"></strong>?
+                </p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Advertencia:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Esta acción no se puede deshacer</li>
+                        <li>Los movimientos asociados perderán la referencia a este tipo de pago</li>
+                    </ul>
+                </div>
+                <p class="text-center text-muted">
+                    <small>Por favor, confirme que desea continuar con la eliminación.</small>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <form id="deleteTipoPagoForm" method="post" style="display: inline;" asp-page-handler="Delete">
+                    <input type="hidden" id="tipoPagoIdInput" name="id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Eliminar Tipo de Pago
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Función para confirmar eliminación de tipo de pago
+        function confirmarEliminacion(tipoPagoId, nombreTipoPago) {
+            document.getElementById('tipoPagoNombre').textContent = nombreTipoPago;
+            document.getElementById('tipoPagoIdInput').value = tipoPagoId;
+
+            var modal = new bootstrap.Modal(document.getElementById('deleteTipoPagoModal'));
+            modal.show();
+        }
+
+        // Inicializar tooltips de Bootstrap si están disponibles
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // Auto-ocultar alertas después de 5 segundos
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+
+    <style>
+        .modal-header.bg-danger {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .fa-3x {
+            font-size: 3rem;
+        }
+
+        .btn-group .btn {
+            margin: 0 1px;
+        }
+
+        .alert-warning {
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+}
